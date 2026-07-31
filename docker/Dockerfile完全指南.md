@@ -103,6 +103,52 @@ FROM python:3.9-slim
 | `golang:1.21` | Go 编译环境 |
 | `scratch` | 空镜像，用于编译后的静态二进制 |
 
+### WORKDIR — 设置工作目录
+
+设置后续 RUN、CMD、COPY 指令的工作目录。如果设置的目录不存在，Docker 会自动创建该目录。
+
+**关于 WORKDIR 的说明**：
+- **位置**：WORKDIR 可以在 Dockerfile 中任意位置使用，但通常放在 FROM 之后、RUN/COPY 之前，因为它会影响后续指令的行为
+- **默认值**：如果没有设置 WORKDIR，默认工作目录是镜像的根目录 `/`
+- **作用范围**：WORKDIR 设置的工作目录既影响**镜像构建时**（RUN、COPY 等指令的执行目录），也影响**容器运行时**（通过 `docker exec` 进入容器时的默认目录）
+
+#### 命令格式
+
+```
+WORKDIR [目录路径]
+```
+
+| 组成部分 | 说明 | 示例 |
+|----------|------|------|
+| 目录路径 | 镜像中的目录路径，支持绝对路径 | `/app`、`/home/user/project` |
+
+#### 命令示例
+
+```dockerfile
+WORKDIR /app
+```
+
+#### 命令示例解析
+
+| 命令 | 含义 |
+|------|------|
+| `WORKDIR /app` | 将工作目录设置为 /app，后续指令都在 /app 下执行 |
+
+**WORKDIR 的影响**：设置 WORKDIR 后，COPY 和 RUN 中的 `.` 都代表这个目录。
+
+```dockerfile
+WORKDIR /app
+COPY . .
+RUN pip install .
+```
+
+以上两条指令等价于：
+
+```dockerfile
+COPY . /app
+RUN cd /app && pip install .
+```
+
 ### RUN — 执行命令
 
 在构建镜像时执行 Linux 命令。
@@ -157,8 +203,8 @@ COPY [源路径] [目标路径]
 
 | 组成部分 | 说明 | 示例 |
 |----------|------|------|
-| 源路径 | 本地文件路径，可以是相对路径（相对于 Dockerfile 所在目录）或绝对路径 | `requirements.txt`（单个文件）<br>`src/`（整个目录，递归复制）<br>`.`（Dockerfile 所在目录下所有文件，受 .dockerignore 排除） |
-| 目标路径 | 镜像中的目标路径 | `.`（当前工作目录）<br>`/app/`<br>`/app/config/` |
+| 源路径 | 本地文件路径<br>1. 相对路径（相对于 Dockerfile 所在目录）<br>2. 绝对路径 | `requirements.txt`（单个文件）<br>`src/`（整个目录，递归复制）<br>`.`（Dockerfile 所在目录下所有文件，受 .dockerignore 排除） |
+| 目标路径 | 镜像中的目标路径 | `.`（由 WORKDIR 设置的工作目录，未设置时默认为 `/`）<br>`/app/`<br>`/app/config/` |
 
 **目录复制示例**：假设项目结构如下：
 
@@ -207,47 +253,6 @@ COPY . .
 | `ADD` | 除复制外，支持 URL 下载和自动解压 tar |
 
 **推荐优先使用 COPY**，行为更明确。
-
-### WORKDIR — 设置工作目录
-
-设置后续 RUN、CMD、COPY 指令的工作目录。如果目录不存在，自动创建。
-
-#### 命令格式
-
-```
-WORKDIR [目录路径]
-```
-
-| 组成部分 | 说明 | 示例 |
-|----------|------|------|
-| 目录路径 | 镜像中的目录路径，支持绝对路径 | `/app`、`/home/user/project` |
-
-#### 命令示例
-
-```dockerfile
-WORKDIR /app
-```
-
-#### 命令示例解析
-
-| 命令 | 含义 |
-|------|------|
-| `WORKDIR /app` | 将工作目录设置为 /app，后续指令都在 /app 下执行 |
-
-**WORKDIR 的影响**：设置 WORKDIR 后，COPY 和 RUN 中的 `.` 都代表这个目录。
-
-```dockerfile
-WORKDIR /app
-COPY . .
-RUN pip install .
-```
-
-以上两条指令等价于：
-
-```dockerfile
-COPY . /app
-RUN cd /app && pip install .
-```
 
 ### ENV — 设置环境变量
 
