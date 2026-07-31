@@ -392,9 +392,25 @@ ENTRYPOINT ["python", "app.py"]
 
 ## Dockerfile 使用方法
 
+Dockerfile 的使用需要在**安装了 Docker 的环境**中执行。以下是常见的使用场景：
+
+### 在哪里使用
+
+| 环境 | 说明 |
+|------|------|
+| 本地电脑 | 在开发者的电脑上安装 Docker Desktop，用于本地开发和测试 |
+| 服务器 | 在 Linux 服务器上安装 Docker，用于部署应用 |
+| CI/CD 流水线 | 在 Jenkins、GitLab CI 等持续集成工具中自动构建镜像 |
+
+**前提条件**：无论在哪种环境，都需要先安装 Docker。安装完成后，在终端中执行以下命令。
+
+### 使用步骤
+
 有了 Dockerfile 后，使用分三步：
 
 **第一步：构建镜像**
+
+在终端中，进入 Dockerfile 所在的目录，执行：
 
 ```bash
 docker build -t my-app:v1.0 .
@@ -403,7 +419,7 @@ docker build -t my-app:v1.0 .
 | 参数 | 说明 |
 |------|------|
 | `-t my-app:v1.0` | 给镜像命名并打标签 |
-| `.` | 构建上下文路径，`.` 表示当前目录 |
+| `.` | 构建上下文路径，`.` 表示 Dockerfile 所在的目录 |
 
 **第二步：查看镜像**
 
