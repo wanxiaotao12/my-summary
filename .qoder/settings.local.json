@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(git:*)"
+      "Bash(git:*)",
+      "Bash(ls -la ~/.qoder-cn/ 2>/dev/null || echo \"Directory not found\")",
+      "Read(//Users/hongming/.qoder-cn/**)"
     ]
   }
 }
