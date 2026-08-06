@@ -245,21 +245,6 @@ docker logs -f <容器名或ID>
 
 ---
 
-## Docker Compose
-
-```bash
-# 查看版本
-docker compose version
-
-# 列出项目所有容器
-docker compose ps
-
-# 停止并移除容器、网络
-docker compose down
-
-# 启动所有服务
-docker compose up -d
-```
 
 ---
 
