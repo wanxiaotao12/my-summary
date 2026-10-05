@@ -3,7 +3,8 @@
     "allow": [
       "Bash(git:*)",
       "Bash(ls -la ~/.qoder-cn/ 2>/dev/null || echo \"Directory not found\")",
-      "Read(//Users/hongming/.qoder-cn/**)"
+      "Read(//Users/hongming/.qoder-cn/**)",
+      "Bash(mkdir -p /Users/hongming/mywork/my-summary/04常用中间件/监控 && mv /Users/hongming/mywork/my-summary/03运维/k8s/grafana.md /Users/hongming/mywork/my-summary/04常用中间件/监控/grafana.md)"
     ]
   }
 }
